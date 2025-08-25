@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/rizz.dir/src/main.cpp.o CMakeFiles/rizz.dir/src/lexer.cpp.o CMakeFiles/rizz.dir/src/parser.cpp.o CMakeFiles/rizz.dir/src/interpreter.cpp.o -o rizz 
