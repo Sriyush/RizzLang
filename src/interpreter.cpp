@@ -1,7 +1,7 @@
 #include "interpreter.hpp"
 #include <iostream>
 #include <stdexcept>
-
+#include <cmath>
 void Interpreter::execute(const std::vector<std::shared_ptr<ASTNode>>& statements) {
     for (auto& stmt : statements) {
         executeNode(stmt);
@@ -13,12 +13,12 @@ void Interpreter::executeNode(const std::shared_ptr<ASTNode>& node) {
         case ASTNodeType::PRINT_STMT: {
             auto stmt = std::dynamic_pointer_cast<PrintStmt>(node);
             auto val = evalExpression(stmt->value);
-            if (std::holds_alternative<int>(val))
-                std::cout << std::get<int>(val) << std::endl;
+            if (std::holds_alternative<double>(val))
+                std::cout << std::get<double>(val) << std::endl;
             else if (std::holds_alternative<std::string>(val))
                 std::cout << std::get<std::string>(val) << std::endl;
             else if (std::holds_alternative<bool>(val))
-                std::cout << (std::get<bool>(val) ? "true" : "false") << std::endl;
+                std::cout << (std::get<bool>(val) ? "no_cap" : "cap") << std::endl;
             break;
         }
 
@@ -32,7 +32,7 @@ void Interpreter::executeNode(const std::shared_ptr<ASTNode>& node) {
         case ASTNodeType::IF_STMT: {
             auto stmt = std::dynamic_pointer_cast<IfStmt>(node);
             auto cond = evalExpression(stmt->condition);
-            if (std::holds_alternative<int>(cond) && std::get<int>(cond)) {
+            if (std::holds_alternative<double>(cond) && std::get<double>(cond)) {
                 for (auto& child : stmt->body) {
                     executeNode(child);
                 }
@@ -70,12 +70,23 @@ Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode>& n
             auto left = evalExpression(expr->left);
             auto right = evalExpression(expr->right);
 
-            if (std::holds_alternative<int>(left) && std::holds_alternative<int>(right)) {
-                int l = std::get<int>(left);
-                int r = std::get<int>(right);
-                if (expr->op == ">") return l > r;
-                if (expr->op == "<") return l < r;
-                if (expr->op == "==") return l == r;
+            if (std::holds_alternative<double>(left) && std::holds_alternative<double>(right)) {
+                double l = std::get<double>(left);
+                double r = std::get<double>(right);
+                if (expr->op == ">")  return (l > r);
+                if (expr->op == "<")  return (l < r);
+                if (expr->op == "==") return (l == r);
+                if (expr->op == "!=") return (l != r);
+                if (expr->op == ">=") return (l >= r);
+                if (expr->op == "<=") return (l <= r);
+
+                if (expr->op == "+") return l + r;
+                if (expr->op == "-") return l - r;
+                if (expr->op == "*") return l * r;
+                if (expr->op == "/") return l / r;
+                if (expr->op == "%") return std::fmod(l, r);
+
+                
                 throw std::runtime_error("Unknown binary operator: " + expr->op);
             }
             throw std::runtime_error("Invalid operands for binary operator: " + expr->op);

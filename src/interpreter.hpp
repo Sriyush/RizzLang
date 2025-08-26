@@ -8,7 +8,7 @@
 
 class Interpreter {
 public:
-    using Value = std::variant<int, std::string, bool>;
+    using Value = std::variant<double, std::string, bool>;
 
     void execute(const std::vector<std::shared_ptr<ASTNode>>& statements);
 

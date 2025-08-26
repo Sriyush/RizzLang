@@ -52,8 +52,8 @@ struct IfStmt : public ASTNode {
 
 // Literals (numbers, strings, identifiers)
 struct NumberExpr : public ASTNode {
-    int value;
-    NumberExpr(int v) { type = ASTNodeType::NUMBER; value = v; }
+    double value;
+    NumberExpr(double v) { type = ASTNodeType::NUMBER; value = v; }
 };
 
 struct StringExpr : public ASTNode {

@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
-
+//defining all kind of identifiers which will be used in the language
 enum class TokenType {
     PRINT, IF, ELSE, FUNC, LOOP, TRUE, FALSE,
-    IDENT, NUMBER, STRING,
-    ASSIGN, GT, COLON, NEWLINE,CONTINUE,BREAK,
+    IDENT, INT, FLOAT, STRING,
+    ASSIGN, GT,LT,GE, LE, EQ, NEQ, 
+    COLON, NEWLINE,CONTINUE,BREAK,
+    PLUS,MINUS,MUL,DIV,MOD,LPAREN,RPAREN,
     ENDOFFILE
 };
 
