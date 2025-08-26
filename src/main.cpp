@@ -19,8 +19,10 @@ bruh y +(-x)
 a= "Ayush Srivastava"
 bruh a[-9]
 bruh a[7]
-sus x > 5:
+bet x> 5:
     bruh "big clout"
+noFam:
+    bruh "bomboclat"
 )";
 
     Lexer lexer(code);

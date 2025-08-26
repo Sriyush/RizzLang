@@ -46,6 +46,7 @@ struct AssignStmt : public ASTNode {
 struct IfStmt : public ASTNode {
     std::shared_ptr<ASTNode> condition;
     std::vector<std::shared_ptr<ASTNode>> body;
+    std::vector<std::shared_ptr<ASTNode>> elseBody;
     IfStmt(std::shared_ptr<ASTNode> cond) {
         type = ASTNodeType::IF_STMT;
         condition = cond;

@@ -62,8 +62,8 @@ Token Lexer::identifier() {
     }
 
     if (result == "bruh") return {TokenType::PRINT, result};
-    if (result == "sus") return {TokenType::IF, result};
-    if (result == "bet") return {TokenType::ELSE, result};
+    if (result == "bet") return {TokenType::IF, result};
+    if (result == "noFam") return {TokenType::ELSE, result};
     if (result == "drip") return {TokenType::FUNC, result};
     if (result == "loop") return {TokenType::LOOP, result};
     if (result == "no_cap") return {TokenType::TRUE, result};

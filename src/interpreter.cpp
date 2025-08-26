@@ -35,26 +35,25 @@ void Interpreter::executeNode(const std::shared_ptr<ASTNode> &node)
         break;
     }
 
-    case ASTNodeType::IF_STMT:
-    {
-        auto stmt = std::dynamic_pointer_cast<IfStmt>(node);
-        auto cond = evalExpression(stmt->condition);
-        if (std::holds_alternative<double>(cond) && std::get<double>(cond))
-        {
-            for (auto &child : stmt->body)
-            {
-                executeNode(child);
-            }
-        }
-        else if (std::holds_alternative<bool>(cond) && std::get<bool>(cond))
-        {
-            for (auto &child : stmt->body)
-            {
-                executeNode(child);
-            }
-        }
-        break;
+case ASTNodeType::IF_STMT: {
+    auto stmt = std::dynamic_pointer_cast<IfStmt>(node);
+    bool executed = false;
+
+    auto condVal = evalExpression(stmt->condition);
+    if ((std::holds_alternative<double>(condVal) && std::get<double>(condVal) != 0) ||
+        (std::holds_alternative<bool>(condVal) && std::get<bool>(condVal))) {
+        for (auto &child : stmt->body)
+            executeNode(child);
+        executed = true;
     }
+
+    if (!executed && !stmt->elseBody.empty()) {
+        for (auto &child : stmt->elseBody)
+            executeNode(child);
+    }
+    break;
+}
+
 
     default:
         throw std::runtime_error("Unknown AST node type in interpreter");
