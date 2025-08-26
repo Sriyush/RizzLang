@@ -121,23 +121,79 @@ Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode> &n
 
         throw std::runtime_error("Invalid operands for binary operator: " + expr->op);
     }
-    case ASTNodeType::UNARY_EXPR: {
+    case ASTNodeType::UNARY_EXPR:
+    {
         auto expr = std::dynamic_pointer_cast<UnaryExpr>(node);
         auto val = evalExpression(expr->operand);
 
-        if (expr->op == "!") {
-            if (std::holds_alternative<bool>(val)) return !std::get<bool>(val);
-            if (std::holds_alternative<double>(val)) return std::get<double>(val) == 0.0;
+        if (expr->op == "!")
+        {
+            if (std::holds_alternative<bool>(val))
+                return !std::get<bool>(val);
+            if (std::holds_alternative<double>(val))
+                return std::get<double>(val) == 0.0;
             throw std::runtime_error("Invalid operand type for '!'");
         }
 
-        if (expr->op == "-") {
-            if (std::holds_alternative<double>(val)) return -std::get<double>(val);
+        if (expr->op == "-")
+        {
+            if (std::holds_alternative<double>(val))
+                return -std::get<double>(val);
             throw std::runtime_error("Invalid operand type for unary '-'");
         }
 
         throw std::runtime_error("Unknown unary operator: " + expr->op);
     }
+case ASTNodeType::INDEX_EXPR:
+{
+    auto idx = std::dynamic_pointer_cast<IndexExpr>(node);
+
+    auto targetVal = evalExpression(idx->target);
+    auto indexVal = evalExpression(idx->index);
+
+    if (!std::holds_alternative<double>(indexVal))
+    {
+        throw std::runtime_error("Index must be a number");
+    }
+    int i = static_cast<int>(std::get<double>(indexVal));
+
+    // String indexing
+    if (std::holds_alternative<std::string>(targetVal))
+    {
+        const std::string &s = std::get<std::string>(targetVal);
+
+        // 🔥 backward indexing
+        if (i < 0) {
+            i = static_cast<int>(s.size()) + i;
+        }
+
+        if (i < 0 || i >= (int)s.size())
+        {
+            throw std::runtime_error("String index out of range");
+        }
+        return std::string(1, s[i]);
+    }
+    // Array indexing
+    else if (std::holds_alternative<std::vector<Value>>(targetVal))
+    {
+        const auto &arr = std::get<std::vector<Value>>(targetVal);
+
+        // 🔥 backward indexing
+        if (i < 0) {
+            i = static_cast<int>(arr.size()) + i;
+        }
+
+        if (i < 0 || i >= (int)arr.size())
+        {
+            throw std::runtime_error("Array index out of range");
+        }
+        return arr[i];
+    }
+    else
+    {
+        throw std::runtime_error("Indexing not supported on this type");
+    }
+}
 
     default:
         throw std::runtime_error("Unknown expression node in interpreter");

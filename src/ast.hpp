@@ -13,7 +13,8 @@ enum class ASTNodeType {
     NUMBER,
     STRING,
     BINARY_EXPR,
-    UNARY_EXPR
+    UNARY_EXPR,
+    INDEX_EXPR
 };
 
 struct ASTNode {
@@ -85,5 +86,16 @@ struct UnaryExpr : public ASTNode {
     UnaryExpr(const std::string& op, std::shared_ptr<ASTNode> operand)
         : op(op), operand(std::move(operand)) {
         type = ASTNodeType::UNARY_EXPR;
+    }
+};
+
+struct IndexExpr : public ASTNode {
+    std::shared_ptr<ASTNode> target; // the array/string being indexed
+    std::shared_ptr<ASTNode> index;  // the index expression
+
+    IndexExpr(std::shared_ptr<ASTNode> t, std::shared_ptr<ASTNode> i) {
+        type = ASTNodeType::INDEX_EXPR; // or better: add ASTNodeType::INDEX_EXPR
+        target = std::move(t);
+        index = std::move(i);
     }
 };

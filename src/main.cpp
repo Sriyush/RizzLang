@@ -15,7 +15,10 @@ z = no_cap
 bruh !z
 bruh !cap
 bruh -x
-bruh y -(-x)
+bruh y +(-x)
+a= "Ayush Srivastava"
+bruh a[-9]
+bruh a[7]
 sus x > 5:
     bruh "big clout"
 )";

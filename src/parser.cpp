@@ -80,13 +80,27 @@ std::shared_ptr<ASTNode> Parser::primary() {
 
         case TokenType::STRING:
             return std::make_shared<StringExpr>(tok.value);
-        case TokenType::IDENT:
-            return std::make_shared<IdentExpr>(tok.value);
+        case TokenType::IDENT: {
+            std::shared_ptr<ASTNode> expr = std::make_shared<IdentExpr>(tok.value);
+
+
+            while (peek().type == TokenType::LBRACKET){
+                advance();
+                auto indexExpr = expression();
+                if (peek().type != TokenType::RBRACKET){
+                    throw std::runtime_error("Error!! Mah brotha did ']' went to buy milk?");
+                }
+                advance();
+                expr = std::make_shared<IndexExpr>(expr , indexExpr);
+            }
+            return expr;
+        }
+
         case TokenType::TRUE:
             return std::make_shared<NumberExpr>(1);
         case TokenType::FALSE:
             return std::make_shared<NumberExpr>(0);
-                    case TokenType::LPAREN: {
+        case TokenType::LPAREN: {
             auto expr = expression();
             if (peek().type != TokenType::RPAREN)
                 throw std::runtime_error("Expected ')'");

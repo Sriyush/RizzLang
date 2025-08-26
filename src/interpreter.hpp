@@ -8,7 +8,18 @@
 
 class Interpreter {
 public:
-    using Value = std::variant<double, std::string, bool>;
+    struct Value; // forward declaration of recursive type
+
+    using Array = std::vector<Value>;
+
+    struct Value : std::variant<
+        double,
+        std::string,
+        bool,
+        Array
+    > {
+        using variant::variant; // inherit constructors
+    };
 
     void execute(const std::vector<std::shared_ptr<ASTNode>>& statements);
 

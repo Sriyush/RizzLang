@@ -128,6 +128,8 @@ Token Lexer::getNextToken() {
         if (currentChar == '%') { advance(); return {TokenType::MOD, "%"}; }
         if (currentChar == '(') { advance(); return {TokenType::LPAREN, "("}; }
         if (currentChar == ')') { advance(); return {TokenType::RPAREN, ")"}; }
+        if (currentChar == '[') { advance(); return {TokenType::LBRACKET, "["}; }
+        if (currentChar == ']') { advance(); return {TokenType::RBRACKET, "]"}; }
         // if (currentChar == '==') { ad}
         std::cerr << "Unexpected char: " << currentChar << "\n";
         advance();
