@@ -147,7 +147,7 @@ std::shared_ptr<ASTNode> Parser::parseTerm() {
 }
 
 std::shared_ptr<ASTNode> Parser::parseFactor() {
-    auto left = primary();
+    auto left = parseUnary();
 
     while (!isAtEnd() &&
           (peek().type == TokenType::MUL ||
@@ -155,9 +155,22 @@ std::shared_ptr<ASTNode> Parser::parseFactor() {
            peek().type == TokenType::MOD)) 
     {
         Token op = advance();
-        auto right = primary();
+        auto right = parseUnary();
         left = std::make_shared<BinaryExpr>(left, op.value, right);
     }
     return left;
 }
 
+
+std::shared_ptr<ASTNode> Parser::parseUnary() {
+    if (!isAtEnd() && 
+        (peek().type == TokenType::REV || // for !
+         peek().type == TokenType::MINUS)) // for -x
+    {
+        Token op = advance();
+        auto right = parseUnary();
+        return std::make_shared<UnaryExpr>(op.value, right);
+    }
+
+    return primary(); // fallback to normal literals/identifiers/etc.
+}

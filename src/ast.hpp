@@ -13,6 +13,7 @@ enum class ASTNodeType {
     NUMBER,
     STRING,
     BINARY_EXPR,
+    UNARY_EXPR
 };
 
 struct ASTNode {
@@ -74,5 +75,15 @@ struct BinaryExpr : public ASTNode {
     BinaryExpr(std::shared_ptr<ASTNode> l, const std::string& o, std::shared_ptr<ASTNode> r) {
         type = ASTNodeType::BINARY_EXPR;
         left = l; op = o; right = r;
+    }
+};
+
+struct UnaryExpr : public ASTNode {
+    std::string op;  // e.g. "!"
+    std::shared_ptr<ASTNode> operand;
+
+    UnaryExpr(const std::string& op, std::shared_ptr<ASTNode> operand)
+        : op(op), operand(std::move(operand)) {
+        type = ASTNodeType::UNARY_EXPR;
     }
 };

@@ -18,7 +18,8 @@ public:
     std::shared_ptr<ASTNode> statement();
     std::shared_ptr<ASTNode> expression();
     std::shared_ptr<ASTNode> primary();
-    // std::shared_ptr<ASTNode> parseExpression();
+
+    std::shared_ptr<ASTNode> parseUnary();
     std::shared_ptr<ASTNode> parseTerm();
     std::shared_ptr<ASTNode> parseFactor();
 

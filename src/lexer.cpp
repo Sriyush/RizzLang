@@ -56,7 +56,7 @@ Token Lexer::number() {
 //this reads variables and functions then links them to their resp keywords "bruh" -> print and more like this , if no keyword matches then its generic IDENT
 Token Lexer::identifier() {
     std::string result;
-    while (std::isalnum(currentChar)) {
+    while (std::isalnum(currentChar) || currentChar == '_') {
         result += currentChar;
         advance();
     }
@@ -68,8 +68,8 @@ Token Lexer::identifier() {
     if (result == "loop") return {TokenType::LOOP, result};
     if (result == "no_cap") return {TokenType::TRUE, result};
     if (result == "cap") return {TokenType::FALSE, result};
-    if (result == "move_it") return {TokenType::CONTINUE, result};
-    if (result == "calm_down") return {TokenType::BREAK, result};
+    if (result == "yeet") return {TokenType::CONTINUE, result};
+    if (result == "sybau") return {TokenType::BREAK, result};
 
     return {TokenType::IDENT, result};
 }
@@ -118,7 +118,7 @@ Token Lexer::getNextToken() {
         if (currentChar == '!') {
             advance();
             if (currentChar == '=') { advance(); return {TokenType::NEQ, "!="}; }
-            throw std::runtime_error("This shi is Unexpected my brotha'!'");
+            return {TokenType::REV, "!"};
         }
         if (currentChar == ':') { advance(); return {TokenType::COLON, ":"}; }
         if (currentChar == '+') { advance(); return {TokenType::PLUS, "+"}; }

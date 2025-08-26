@@ -11,7 +11,11 @@ bruh x + y * 3
 bruh (x + y) % 10
 bruh x >= y
 bruh x <= y
-
+z = no_cap
+bruh !z
+bruh !cap
+bruh -x
+bruh y -(-x)
 sus x > 5:
     bruh "big clout"
 )";
