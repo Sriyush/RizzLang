@@ -1,29 +1,32 @@
-bruh "hello world";
+bruh "hello world"
 x = 10;
-y= 103.2;
-bruh y/x;
-bet x<5:
-    bruh "big clout";
-noFam x==10:
-    bruh "bunda";
+y= 103.2
+bruh y/x
+a=0
+bet x>5:
+    bruh "big clout"
+noFam x!=10:
+    bruh "bunda"
 noFam x>10:
-    bruh "bomboclat";
+    bruh "bomboclat"
+    a=19
 forReal:
-    bruh "yomomma";
+    bruh "yomomma"
+yikes
 
-spill dawg;
-spill nigger;
-
+spill dawg
+spill nigger
+bruh a
 result = (dawg + nigger) * 3;
-bruh result;
+bruh result
 
 drip compare(x,y):
-    bruh "This function starts here";
-    bruh x >= y;
-    bruh x <= y;
-    z = no_cap;
-    bruh !z;
-    bruh !cap;
-    bruh -x;
-finna;
-compare(x,y);
+    bruh "This function starts here"
+    bruh x >= y
+    bruh x <= y
+    z = no_cap
+    bruh !z
+    bruh !cap
+    bruh -x
+finna
+compare(x,y)

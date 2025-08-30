@@ -8,20 +8,24 @@ std::vector<std::shared_ptr<ASTNode>> Parser::parse()
     std::vector<std::shared_ptr<ASTNode>> program;
     while (!isAtEnd())
     {
-        if (peek().type == TokenType::NEWLINE) {
-            advance(); 
-            continue;
-        }
-        if (peek().type == TokenType::SEMI) {
+        if (peek().type == TokenType::NEWLINE)
+        {
             advance();
             continue;
         }
-        if (peek().type == TokenType::ENDOFFILE) {
+        if (peek().type == TokenType::SEMI)
+        {
+            advance();
+            continue;
+        }
+        if (peek().type == TokenType::ENDOFFILE)
+        {
             break;
         }
 
         auto stmt = statement();
-        if (stmt) program.push_back(stmt);
+        if (stmt)
+            program.push_back(stmt);
     }
     return program;
 }
@@ -36,61 +40,71 @@ std::shared_ptr<ASTNode> Parser::statement()
         advance();
         return std::make_shared<PrintStmt>(expression());
 
-    case TokenType::COND:   // delegate to helper
+    case TokenType::COND: // delegate to helper
         return parseIfStatement();
-         
+
     case TokenType::COLON:
         advance();
         return nullptr;
 
     case TokenType::SEMI:
-        advance(); 
+        advance();
         return nullptr;
 
-case TokenType::IDENT:
-{
-    std::string name = tok.value;
-    size_t lookaheadPos = pos + 1;
-    while (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::NEWLINE)
-        lookaheadPos++;
+    case TokenType::IDENT:
+    {
+        std::string name = tok.value;
+        size_t lookaheadPos = pos + 1;
+        while (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::NEWLINE)
+            lookaheadPos++;
 
-    // Assignment: x = expr
-    if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::ASSIGN) {
-        advance(); // consume IDENT
-        while (peek().type == TokenType::NEWLINE) advance();
-        advance(); // consume '='
-        auto val = expression();
-        if (peek().type == TokenType::SEMI) advance(); // optional ';'
-        return std::make_shared<AssignStmt>(name, val);
-    }
-
-    // Function call: foo(...)
-    if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::LPAREN) {
-        advance(); // consume IDENT
-        advance(); // consume '('
-        std::vector<std::shared_ptr<ASTNode>> args;
-        if (peek().type != TokenType::RPAREN) {
-            do {
-                args.push_back(expression());
-                if (peek().type == TokenType::COMMA) {
-                    advance(); // consume ','
-                } else {
-                    break;
-                }
-            } while (true);
+        // Assignment: x = expr
+        if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::ASSIGN)
+        {
+            advance();
+            while (peek().type == TokenType::NEWLINE)
+                advance();
+            advance(); //
+            auto val = expression();
+            if (peek().type == TokenType::SEMI)
+                advance();
+            return std::make_shared<AssignStmt>(name, val);
         }
-        advance();
-        if (peek().type == TokenType::SEMI) advance(); // optional ';'
-        return std::make_shared<ExprStmt>(
-            std::make_shared<CallExpr>(name, args)
-        );
-    }
 
-    // Fallback: just identifier reference
-    advance();
-    if (peek().type == TokenType::SEMI) advance();
-    return std::make_shared<ExprStmt>(std::make_shared<IdentExpr>(name));
-}
+        // Function call: foo(...)
+        if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::LPAREN)
+        {
+            advance(); // consume IDENT
+            advance(); // consume '('
+            std::vector<std::shared_ptr<ASTNode>> args;
+            if (peek().type != TokenType::RPAREN)
+            {
+                do
+                {
+                    args.push_back(expression());
+                    if (peek().type == TokenType::COMMA)
+                    {
+                        advance(); // consume ','
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
+            }
+            advance();
+            if (peek().type == TokenType::SEMI)
+                advance(); // optional ';'
+            return std::make_shared<ExprStmt>(
+                std::make_shared<CallExpr>(name, args));
+        }
+
+        // Fallback: just identifier reference
+        advance();
+        if (peek().type == TokenType::SEMI)
+            advance();
+        return std::make_shared<ExprStmt>(std::make_shared<IdentExpr>(name));
+    }
 
     case TokenType::CONTINUE:
         advance();
@@ -99,11 +113,14 @@ case TokenType::IDENT:
     case TokenType::BREAK:
         advance();
         return nullptr;
-    
+
     case TokenType::FUNCEND:
         advance();
         return nullptr;
 
+    case TokenType::CONDEND:
+        advance();
+        return nullptr;
     case TokenType::FUNC:
         return parseFunction();
 
@@ -134,50 +151,61 @@ std::shared_ptr<ASTNode> Parser::primary()
     case TokenType::STRING:
         return std::make_shared<StringExpr>(tok.value);
 
-case TokenType::IDENT:
-{
-    std::string name = tok.value;
-    std::shared_ptr<ASTNode> expr;
+    case TokenType::IDENT:
+    {
+        std::string name = tok.value;
+        std::shared_ptr<ASTNode> expr;
 
-    // Function call? IDENT '(' ...
-    if (peek().type == TokenType::LPAREN) {
-        advance(); // consume '('
-        std::vector<std::shared_ptr<ASTNode>> args;
-        if (peek().type != TokenType::RPAREN) {
-            do {
-    args.push_back(expression());
-    if (peek().type == TokenType::COMMA) {
-        advance(); // consume comma
-    } else {
-        break;
-    }
-} while (true);
-
+        // Function call? IDENT '(' ...
+        if (peek().type == TokenType::LPAREN)
+        {
+            advance(); // consume '('
+            std::vector<std::shared_ptr<ASTNode>> args;
+            if (peek().type != TokenType::RPAREN)
+            {
+                do
+                {
+                    args.push_back(expression());
+                    if (peek().type == TokenType::COMMA)
+                    {
+                        advance(); // consume comma
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
+            }
+            if (peek().type != TokenType::RPAREN)
+            {
+                throw std::runtime_error("Expected ')' after function arguments");
+            }
+            advance(); // consume ')'
+            expr = std::make_shared<CallExpr>(name, args);
         }
-        if (peek().type != TokenType::RPAREN) {
-            throw std::runtime_error("Expected ')' after function arguments");
+        else
+        {
+            expr = std::make_shared<IdentExpr>(name);
         }
-        advance(); // consume ')'
-        expr = std::make_shared<CallExpr>(name, args);
-    } else {
-        expr = std::make_shared<IdentExpr>(name);
+
+        // Handle array indexing after either variable or call
+        while (peek().type == TokenType::LBRACKET)
+        {
+            advance(); // consume '['
+            auto indexExpr = expression();
+            if (peek().type != TokenType::RBRACKET)
+                throw std::runtime_error("Error!! Mah brotha did ']' went to buy milk?");
+            advance(); // consume ']'
+            expr = std::make_shared<IndexExpr>(expr, indexExpr);
+        }
+
+        return expr;
     }
 
-    // Handle array indexing after either variable or call
-    while (peek().type == TokenType::LBRACKET) {
-        advance(); // consume '['
-        auto indexExpr = expression();
-        if (peek().type != TokenType::RBRACKET)
-            throw std::runtime_error("Error!! Mah brotha did ']' went to buy milk?");
-        advance(); // consume ']'
-        expr = std::make_shared<IndexExpr>(expr, indexExpr);
-    }
-
-    return expr;
-}
-
-    case TokenType::TRUE:  return std::make_shared<NumberExpr>(1);
-    case TokenType::FALSE: return std::make_shared<NumberExpr>(0);
+    case TokenType::TRUE:
+        return std::make_shared<NumberExpr>(1);
+    case TokenType::FALSE:
+        return std::make_shared<NumberExpr>(0);
 
     case TokenType::LPAREN:
     {
@@ -255,51 +283,75 @@ std::shared_ptr<ASTNode> Parser::parseUnary()
     return primary();
 }
 
-const char* ASTNodeTypeToString(ASTNodeType type) {
-    switch(type) {
-        case ASTNodeType::PRINT_STMT: return "PRINT_STMT";
-        case ASTNodeType::ASSIGN_STMT: return "ASSIGN_STMT";
-        case ASTNodeType::IF_STMT: return "IF_STMT";
-        case ASTNodeType::FUNC_DEF: return "FUNC_DEF";
-        case ASTNodeType::CLASS_DEF: return "CLASS_DEF";
-        case ASTNodeType::RETURN_STMT: return "RETURN_STMT";
-        case ASTNodeType::EXPR_STMT: return "EXPR_STMT";
-        case ASTNodeType::INPUT_STMT: return "INPUT_STMT";
-        case ASTNodeType::NUMBER: return "NUMBER";
-        case ASTNodeType::STRING: return "STRING";
-        case ASTNodeType::IDENT: return "IDENT";
-        case ASTNodeType::CALL_EXPR: return "CALL_EXPR";
-        case ASTNodeType::BINARY_EXPR: return "BINARY_EXPR";
-        case ASTNodeType::UNARY_EXPR: return "UNARY_EXPR";
-        case ASTNodeType::INDEX_EXPR: return "INDEX_EXPR";
-        // Add all possible enum values for completeness
-        default: return "UNKNOWN";
+const char *ASTNodeTypeToString(ASTNodeType type)
+{
+    switch (type)
+    {
+    case ASTNodeType::PRINT_STMT:
+        return "PRINT_STMT";
+    case ASTNodeType::ASSIGN_STMT:
+        return "ASSIGN_STMT";
+    case ASTNodeType::IF_STMT:
+        return "IF_STMT";
+    case ASTNodeType::FUNC_DEF:
+        return "FUNC_DEF";
+    case ASTNodeType::CLASS_DEF:
+        return "CLASS_DEF";
+    case ASTNodeType::RETURN_STMT:
+        return "RETURN_STMT";
+    case ASTNodeType::EXPR_STMT:
+        return "EXPR_STMT";
+    case ASTNodeType::INPUT_STMT:
+        return "INPUT_STMT";
+    case ASTNodeType::NUMBER:
+        return "NUMBER";
+    case ASTNodeType::STRING:
+        return "STRING";
+    case ASTNodeType::IDENT:
+        return "IDENT";
+    case ASTNodeType::CALL_EXPR:
+        return "CALL_EXPR";
+    case ASTNodeType::BINARY_EXPR:
+        return "BINARY_EXPR";
+    case ASTNodeType::UNARY_EXPR:
+        return "UNARY_EXPR";
+    case ASTNodeType::INDEX_EXPR:
+        return "INDEX_EXPR";
+    // Add all possible enum values for completeness
+    default:
+        return "UNKNOWN";
     }
 }
 
-std::shared_ptr<ASTNode> Parser::parseInput() {
+std::shared_ptr<ASTNode> Parser::parseInput()
+{
     advance(); // consume 'spill'
     auto nameTok = peek();
-    if (nameTok.type != TokenType::IDENT) {
+    if (nameTok.type != TokenType::IDENT)
+    {
         throw std::runtime_error("Expected variable name after 'spill'");
     }
     advance();
     return std::make_shared<InputStmt>(nameTok.value);
 }
 
-std::shared_ptr<ASTNode> Parser::parseIfStatement() {
+std::shared_ptr<ASTNode> Parser::parseIfStatement()
+{
     std::shared_ptr<IfStmt> head = nullptr;
     std::shared_ptr<IfStmt> current = nullptr;
 
-    while (!isAtEnd() && peek().type == TokenType::COND) {
+    while (!isAtEnd() && peek().type == TokenType::COND)
+    {
         Token token = advance();
         std::shared_ptr<ASTNode> condExpr = nullptr;
 
-        if (token.condType == CondType::IF || token.condType == CondType::ELSEIF) {
+        if (token.condType == CondType::IF || token.condType == CondType::ELSEIF)
+        {
             condExpr = expression();
         }
 
-        if (peek().type != TokenType::COLON) {
+        if (peek().type != TokenType::COLON)
+        {
             throw std::runtime_error("Expected ':' after if/elseif/else condition.");
         }
         advance(); // consume ':'
@@ -308,34 +360,41 @@ std::shared_ptr<ASTNode> Parser::parseIfStatement() {
         while (!isAtEnd() &&
                !(peek().type == TokenType::COND &&
                  (peek().condType == CondType::ELSEIF || peek().condType == CondType::ELSE)) &&
-               peek().type != TokenType::SEMI &&
-               peek().type != TokenType::ENDOFFILE) 
+               peek().type != TokenType::CONDEND &&
+               peek().type != TokenType::ENDOFFILE)
         {
-            if (peek().type == TokenType::NEWLINE) {
+            if (peek().type == TokenType::NEWLINE)
+            {
                 advance();
                 continue;
             }
             auto stmt = statement();
-            if (stmt) body.push_back(stmt);
+            if (stmt)
+                body.push_back(stmt);
         }
 
         auto newNode = std::make_shared<IfStmt>(condExpr, body);
 
-        if (!head) {
+        if (!head)
+        {
             head = newNode;
             current = newNode;
-        } else {
+        }
+        else
+        {
             current->next = newNode;
             current = newNode;
         }
 
-        if (token.condType == CondType::ELSE) break;
+        if (token.condType == CondType::ELSE)
+            break;
     }
 
     return head;
 }
 
-std::shared_ptr<ASTNode> Parser::parseFunction() {
+std::shared_ptr<ASTNode> Parser::parseFunction()
+{
     advance(); // consume 'drip'
 
     Token nameTok = peek();
@@ -348,12 +407,14 @@ std::shared_ptr<ASTNode> Parser::parseFunction() {
     advance(); // consume '('
 
     std::vector<std::string> params;
-    while (peek().type != TokenType::RPAREN) {
+    while (peek().type != TokenType::RPAREN)
+    {
         if (peek().type != TokenType::IDENT)
             throw std::runtime_error("Expected parameter name");
         params.push_back(peek().value);
         advance();
-        if (peek().type == TokenType::COMMA) advance();
+        if (peek().type == TokenType::COMMA)
+            advance();
     }
     advance(); // consume ')'
 
@@ -367,12 +428,21 @@ std::shared_ptr<ASTNode> Parser::parseFunction() {
            peek().type != TokenType::ENDOFFILE &&
            peek().type != TokenType::FUNC &&
            peek().type != TokenType::CLASS &&
-           !(peek().type == TokenType::COND && peek().condType == CondType::ELSE) && peek().type != TokenType::FUNCEND) 
+           !(peek().type == TokenType::COND && peek().condType == CondType::ELSE) && peek().type != TokenType::FUNCEND)
     {
-        if (peek().type == TokenType::NEWLINE) { advance(); continue; }
-        if (peek().type == TokenType::SEMI) { advance(); continue; }
+        if (peek().type == TokenType::NEWLINE)
+        {
+            advance();
+            continue;
+        }
+        if (peek().type == TokenType::SEMI)
+        {
+            advance();
+            continue;
+        }
         auto stmt = statement();
-        if (stmt)   {
+        if (stmt)
+        {
             // std::cout << "parsed stmt of type: " << ASTNodeTypeToString(stmt->type) << std::endl;
             body.push_back(stmt);
         }
@@ -381,7 +451,8 @@ std::shared_ptr<ASTNode> Parser::parseFunction() {
     return std::make_shared<FuncDef>(nameTok.value, params, body);
 }
 
-std::shared_ptr<ASTNode> Parser::parseClass() {
+std::shared_ptr<ASTNode> Parser::parseClass()
+{
     advance(); // consume 'rizz'
 
     Token nameTok = peek();
@@ -396,12 +467,20 @@ std::shared_ptr<ASTNode> Parser::parseClass() {
     std::vector<std::shared_ptr<FuncDef>> methods;
     while (!isAtEnd() &&
            peek().type != TokenType::ENDOFFILE &&
-           peek().type != TokenType::FUNC) {
-        if (peek().type == TokenType::NEWLINE) { advance(); continue; }
-        if (peek().type == TokenType::CLASS) {
+           peek().type != TokenType::FUNC)
+    {
+        if (peek().type == TokenType::NEWLINE)
+        {
+            advance();
+            continue;
+        }
+        if (peek().type == TokenType::CLASS)
+        {
             auto fn = std::dynamic_pointer_cast<FuncDef>(parseFunction());
             methods.push_back(fn);
-        } else {
+        }
+        else
+        {
             statement();
         }
     }

@@ -2,7 +2,7 @@
 #include <string>
 //defining all kind of identifiers which will be used in the language
 enum class TokenType {
-    PRINT,INPUT, COND, FUNC, LOOP, TRUE, FALSE,CLASS,COMMA,FUNCEND,COMMENT,
+    PRINT,INPUT, COND, FUNC, LOOP, TRUE, FALSE,CLASS,COMMA,FUNCEND,CONDEND,COMMENT,
     IDENT, INT, FLOAT, STRING,RETURN,
     ASSIGN, GT,LT,GE, LE, EQ, NEQ, REV,
     COLON, NEWLINE,CONTINUE,BREAK,

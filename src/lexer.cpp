@@ -68,6 +68,7 @@ Token Lexer::identifier() {
     if (result == "noFam") return {TokenType::COND,result ,CondType::ELSEIF};
     if (result == "drip") return {TokenType::FUNC, result};
     if (result == "finna") return {TokenType::FUNCEND , result};
+    if (result == "yikes") return {TokenType::CONDEND , result };
     if (result == "return") return {TokenType::RETURN , result};
     if (result == "rizz") return {TokenType::CLASS, result};
     if (result == "loop") return {TokenType::LOOP, result};
