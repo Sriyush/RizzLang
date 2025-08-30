@@ -5,14 +5,14 @@ bruh y/x
 //less go boizzz
 a=0
 bet x>5:
-    bruh "big clout"
+    bruh "its in if"
 noFam x!=10:
-    bruh "bunda"
+    bruh "its in elseif1"
 noFam x>10:
-    bruh "bomboclat"
+    bruh "its in elseif2"
     a=19
 forReal:
-    bruh "yomomma"
+    bruh "its in else"
 yikes
 
 spill dawg
