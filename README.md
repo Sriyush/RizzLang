@@ -39,7 +39,9 @@ bruh=10
 this language also supports all kind of arthematic operations 
 
 ```rizz
-result = (dawg + nigger) * 3;
+a=10
+b=20
+result = (a + b) * 3;
 bruh result
 ```
 
