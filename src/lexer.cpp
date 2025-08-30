@@ -62,9 +62,14 @@ Token Lexer::identifier() {
     }
 
     if (result == "bruh") return {TokenType::PRINT, result};
-    if (result == "bet") return {TokenType::IF, result};
-    if (result == "noFam") return {TokenType::ELSE, result};
+    if (result == "spill") return {TokenType::INPUT , result};
+    if (result == "bet") return {TokenType::COND, result , CondType::IF};
+    if (result == "forReal") return {TokenType::COND, result , CondType::ELSE};
+    if (result == "noFam") return {TokenType::COND,result ,CondType::ELSEIF};
     if (result == "drip") return {TokenType::FUNC, result};
+    if (result == "finna") return {TokenType::FUNCEND , result};
+    if (result == "return") return {TokenType::RETURN , result};
+    if (result == "rizz") return {TokenType::CLASS, result};
     if (result == "loop") return {TokenType::LOOP, result};
     if (result == "no_cap") return {TokenType::TRUE, result};
     if (result == "cap") return {TokenType::FALSE, result};
@@ -98,7 +103,7 @@ Token Lexer::getNextToken() {
             continue;
         }
         if (std::isdigit(currentChar)) return number();
-        if (std::isalpha(currentChar)) return identifier();
+        if (std::isalpha(currentChar) || currentChar == '_') return identifier();
         if (currentChar == '"') return stringLiteral();
         if (currentChar == '=') {
             advance();
@@ -122,14 +127,16 @@ Token Lexer::getNextToken() {
         }
         if (currentChar == ':') { advance(); return {TokenType::COLON, ":"}; }
         if (currentChar == '+') { advance(); return {TokenType::PLUS, "+"}; }
+        if (currentChar == '/') { advance(); return {TokenType::DIV, "/"}; }
         if (currentChar == '-') { advance(); return {TokenType::MINUS, "-"}; }
         if (currentChar == '*') { advance(); return {TokenType::MUL, "*"}; }
-        if (currentChar == '/') { advance(); return {TokenType::DIV, "/"}; }
         if (currentChar == '%') { advance(); return {TokenType::MOD, "%"}; }
         if (currentChar == '(') { advance(); return {TokenType::LPAREN, "("}; }
         if (currentChar == ')') { advance(); return {TokenType::RPAREN, ")"}; }
         if (currentChar == '[') { advance(); return {TokenType::LBRACKET, "["}; }
         if (currentChar == ']') { advance(); return {TokenType::RBRACKET, "]"}; }
+        if (currentChar == ';') { advance(); return {TokenType::SEMI, ";"}; }
+        if (currentChar == ',') { advance(); return {TokenType::COMMA, ","}; }
         // if (currentChar == '==') { ad}
         std::cerr << "Unexpected char: " << currentChar << "\n";
         advance();

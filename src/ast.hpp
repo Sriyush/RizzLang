@@ -9,17 +9,32 @@ enum class ASTNodeType {
     PRINT_STMT,
     IF_STMT,
     ASSIGN_STMT,
+    EXPR_STMT,
+    INPUT_STMT, 
     IDENT,
     NUMBER,
     STRING,
     BINARY_EXPR,
     UNARY_EXPR,
-    INDEX_EXPR
+    INDEX_EXPR,
+    FUNC_DEF,
+    CLASS_DEF,
+    RETURN_STMT,
+    CALL_EXPR,
+
 };
+
 
 struct ASTNode {
     ASTNodeType type;
     virtual ~ASTNode() = default;
+};
+struct ExprStmt : public ASTNode {
+    std::shared_ptr<ASTNode> expr;
+    ExprStmt(std::shared_ptr<ASTNode> e) { 
+        type = ASTNodeType::EXPR_STMT; 
+        expr = e; 
+    }
 };
 
 // Print statement → bruh "hello"
@@ -28,6 +43,13 @@ struct PrintStmt : public ASTNode {
     PrintStmt(std::shared_ptr<ASTNode> v) { 
         type = ASTNodeType::PRINT_STMT; 
         value = v; 
+    }
+};
+struct InputStmt : public ASTNode {
+    std::string varName;
+    InputStmt(const std::string& var) {
+        type = ASTNodeType::INPUT_STMT;  // 👈 important
+        varName = var;
     }
 };
 
@@ -44,12 +66,17 @@ struct AssignStmt : public ASTNode {
 
 // If statement → sus x > 5: ...
 struct IfStmt : public ASTNode {
-    std::shared_ptr<ASTNode> condition;
-    std::vector<std::shared_ptr<ASTNode>> body;
-    std::vector<std::shared_ptr<ASTNode>> elseBody;
-    IfStmt(std::shared_ptr<ASTNode> cond) {
+    std::shared_ptr<ASTNode> condition;                     // nullptr means ELSE
+    std::vector<std::shared_ptr<ASTNode>> thenBranch;       // body of this branch
+    std::shared_ptr<IfStmt> next;                           // chained else-if or else
+
+    IfStmt(std::shared_ptr<ASTNode> cond,
+           std::vector<std::shared_ptr<ASTNode>> thenB,
+           std::shared_ptr<IfStmt> nextNode = nullptr)
+        : condition(std::move(cond)),
+          thenBranch(std::move(thenB)),
+          next(std::move(nextNode)) {
         type = ASTNodeType::IF_STMT;
-        condition = cond;
     }
 };
 
@@ -98,5 +125,53 @@ struct IndexExpr : public ASTNode {
         type = ASTNodeType::INDEX_EXPR; // or better: add ASTNodeType::INDEX_EXPR
         target = std::move(t);
         index = std::move(i);
+    }
+};
+// Function definition → drip foo(x, y): ...
+struct FuncDef : public ASTNode {
+    std::string name;
+    std::vector<std::string> params;
+    std::vector<std::shared_ptr<ASTNode>> body;
+
+    FuncDef(const std::string &n,
+            std::vector<std::string> p,
+            std::vector<std::shared_ptr<ASTNode>> b) {
+        type = ASTNodeType::FUNC_DEF;
+        name = n;
+        params = std::move(p);
+        body = std::move(b);
+    }
+};
+
+// Function call → foo(42, "yo")
+struct CallExpr : public ASTNode {
+    std::string callee;
+    std::vector<std::shared_ptr<ASTNode>> args;
+
+    CallExpr(const std::string &c, std::vector<std::shared_ptr<ASTNode>> a) {
+        type = ASTNodeType::CALL_EXPR;
+        callee = c;
+        args = std::move(a);
+    }
+};
+
+// Return statement
+struct ReturnStmt : public ASTNode {
+    std::shared_ptr<ASTNode> value;
+    ReturnStmt(std::shared_ptr<ASTNode> v) {
+        type = ASTNodeType::RETURN_STMT;
+        value = v;
+    }
+};
+
+// Class definition → rizz MyClass: ...
+struct ClassDef : public ASTNode {
+    std::string name;
+    std::vector<std::shared_ptr<FuncDef>> methods;
+
+    ClassDef(const std::string &n, std::vector<std::shared_ptr<FuncDef>> m) {
+        type = ASTNodeType::CLASS_DEF;
+        name = n;
+        methods = std::move(m);
     }
 };

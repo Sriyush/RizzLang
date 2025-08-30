@@ -2,16 +2,19 @@
 #include <string>
 //defining all kind of identifiers which will be used in the language
 enum class TokenType {
-    PRINT, IF, ELSE,ELSEIF, FUNC, LOOP, TRUE, FALSE,
-    IDENT, INT, FLOAT, STRING,
+    PRINT,INPUT, COND, FUNC, LOOP, TRUE, FALSE,CLASS,COMMA,FUNCEND,COMMENT,
+    IDENT, INT, FLOAT, STRING,RETURN,
     ASSIGN, GT,LT,GE, LE, EQ, NEQ, REV,
     COLON, NEWLINE,CONTINUE,BREAK,
     PLUS,MINUS,MUL,DIV,MOD,
-    LPAREN,RPAREN,LBRACKET, RBRACKET,
+    LPAREN,RPAREN,LBRACKET, RBRACKET,SEMI,
     ENDOFFILE
 };
+
+enum class CondType{ IF , ELSEIF , ELSE};
 
 struct Token {
     TokenType type;
     std::string value;
+    CondType condType;
 };

@@ -25,7 +25,10 @@ public:
 
 private:
     std::unordered_map<std::string, Value> variables;
+    std::unordered_map<std::string, std::shared_ptr<FuncDef>> functions;
+    std::unordered_map<std::string, std::shared_ptr<ClassDef>> classes;
 
+    void executeInput(const std::shared_ptr<InputStmt>& stmt);
     void executeNode(const std::shared_ptr<ASTNode>& node);
     Value evalExpression(const std::shared_ptr<ASTNode>& node);
 };
