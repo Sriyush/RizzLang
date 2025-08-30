@@ -17,6 +17,15 @@ a= 10
 b=10
 bruh a + b
 ```
+### Booleans
+
+Just like a normal programing this also contains Boolean but with fun naming
+true -> *no_cap* , false -> *cap*
+
+```rizz
+a = cap
+bruh !no_cap //as you can see this language also supports negation
+```
 
 ### Print 
 To print just write *bruh* and whatever you want to print
@@ -88,4 +97,14 @@ drip compare(x,y):
 finna
 
 compare(x,y)
+```
+### Class
+
+To use class just use keyword *rizz* 
+
+```rizz
+rizz Dog:
+    drip bark():
+        bruh "woof!"
+    finna
 ```
