@@ -1,6 +1,7 @@
 # Rizz++ -> A Lang simple like python and fun like Genz slangs
 
 *Tired of the same old boring programming languages?*
+
 Say hello to a fresh Gen-Z flavored language 🚀 — built entirely in C++ with a clean, Python-like syntax (but guess what… no annoying indentation rules).
 
 This isn’t just a language for one dev — it’s a community project. Contribute, experiment, and help it grow. Let’s build something iconic together
