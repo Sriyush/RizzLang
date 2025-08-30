@@ -61,7 +61,7 @@ This language also supports the control flow statements with if elseif and else.
 *bet* -> if , *noFam* -> elseif , *forReal* -> else , *yikes* -> to close conditional block.
 
 ```rizz
-a=10
+x=10
 
 bet x<5:
   bruh "Brotha the number is less than 5"
