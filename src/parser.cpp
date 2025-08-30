@@ -8,7 +8,7 @@ std::vector<std::shared_ptr<ASTNode>> Parser::parse()
     std::vector<std::shared_ptr<ASTNode>> program;
     while (!isAtEnd())
     {
-        if (peek().type == TokenType::NEWLINE)
+        if (peek().type == TokenType::NEWLINE || peek().type == TokenType::COMMENT)
         {
             advance();
             continue;

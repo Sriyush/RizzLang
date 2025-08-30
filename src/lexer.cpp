@@ -126,9 +126,18 @@ Token Lexer::getNextToken() {
             if (currentChar == '=') { advance(); return {TokenType::NEQ, "!="}; }
             return {TokenType::REV, "!"};
         }
+        if (currentChar == '/') {
+            advance(); 
+            if (currentChar == '/') { std::string comment = "//"; 
+                while( currentChar != '\n' && currentChar != '\0' ) {
+                    comment += currentChar;
+                    advance();
+                }
+                return {TokenType::COMMENT, comment};}
+            return {TokenType::DIV, "/"}; 
+        }
         if (currentChar == ':') { advance(); return {TokenType::COLON, ":"}; }
         if (currentChar == '+') { advance(); return {TokenType::PLUS, "+"}; }
-        if (currentChar == '/') { advance(); return {TokenType::DIV, "/"}; }
         if (currentChar == '-') { advance(); return {TokenType::MINUS, "-"}; }
         if (currentChar == '*') { advance(); return {TokenType::MUL, "*"}; }
         if (currentChar == '%') { advance(); return {TokenType::MOD, "%"}; }
