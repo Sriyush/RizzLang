@@ -100,11 +100,17 @@ compare(x,y)
 ```
 ### Class
 
-To use class just use keyword *rizz* 
+To use class just use keyword *rizz* and to close the class scope use *gonner* 
+
+For creating object of that class instead of *new* keyword use *pullup*
 
 ```rizz
 rizz Dog:
     drip bark():
         bruh "woof!"
     finna
+gonner
+
+x = pullup Dog()
+x.bark()
 ```
