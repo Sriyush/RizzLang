@@ -21,7 +21,10 @@ enum class ASTNodeType {
     CLASS_DEF,
     RETURN_STMT,
     CALL_EXPR,
-
+    NEW_OBJECT_EXPR,
+    METHOD_CALL_EXPR,
+    // PROPERTY_ACCESS
+    MEMBER_ACCESS_EXPR
 };
 
 
@@ -173,5 +176,44 @@ struct ClassDef : public ASTNode {
         type = ASTNodeType::CLASS_DEF;
         name = n;
         methods = std::move(m);
+    }
+};
+struct NewObjectExpr : public ASTNode {
+    std::string className;
+    std::vector<std::shared_ptr<ASTNode>> args;
+
+    NewObjectExpr(const std::string &c, std::vector<std::shared_ptr<ASTNode>> a) {
+        type = ASTNodeType::NEW_OBJECT_EXPR;
+        className = c;
+        args = std::move(a);
+    }
+};
+
+// Method call → obj.method(args...)
+// Represents x.y (property access)
+struct MemberAccessExpr : public ASTNode {
+    std::shared_ptr<ASTNode> object;  // the "x"
+    std::string member;               // the "y"
+
+    MemberAccessExpr(std::shared_ptr<ASTNode> obj, const std::string &mem) {
+        type = ASTNodeType::MEMBER_ACCESS_EXPR;
+        object = std::move(obj);
+        member = mem;
+    }
+};
+
+// Represents x.func(args...)
+struct MethodCallExpr : public ASTNode {
+    std::shared_ptr<ASTNode> object;  // the "x"
+    std::string method;               // the "func"
+    std::vector<std::shared_ptr<ASTNode>> arguments;
+
+    MethodCallExpr(std::shared_ptr<ASTNode> obj,
+                   const std::string &meth,
+                   std::vector<std::shared_ptr<ASTNode>> args) {
+        type = ASTNodeType::METHOD_CALL_EXPR;
+        object = std::move(obj);
+        method = meth;
+        arguments = std::move(args);
     }
 };

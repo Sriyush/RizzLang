@@ -71,12 +71,14 @@ Token Lexer::identifier() {
     if (result == "yikes") return {TokenType::CONDEND , result };
     if (result == "return") return {TokenType::RETURN , result};
     if (result == "rizz") return {TokenType::CLASS, result};
+    if (result == "goner") return {TokenType::CLASSEND , result};
     if (result == "loop") return {TokenType::LOOP, result};
     if (result == "no_cap") return {TokenType::TRUE, result};
     if (result == "cap") return {TokenType::FALSE, result};
     if (result == "yeet") return {TokenType::CONTINUE, result};
     if (result == "sybau") return {TokenType::BREAK, result};
-
+    if (result == "pullup") return {TokenType::OBJECT , result};
+    
     return {TokenType::IDENT, result};
 }
 
@@ -133,6 +135,7 @@ Token Lexer::getNextToken() {
                     comment += currentChar;
                     advance();
                 }
+                continue;
                 return {TokenType::COMMENT, comment};}
             return {TokenType::DIV, "/"}; 
         }
@@ -147,6 +150,7 @@ Token Lexer::getNextToken() {
         if (currentChar == ']') { advance(); return {TokenType::RBRACKET, "]"}; }
         if (currentChar == ';') { advance(); return {TokenType::SEMI, ";"}; }
         if (currentChar == ',') { advance(); return {TokenType::COMMA, ","}; }
+        if (currentChar == '.') { advance(); return {TokenType::DOT, "."}; }
         // if (currentChar == '==') { ad}
         std::cerr << "Unexpected char: " << currentChar << "\n";
         advance();

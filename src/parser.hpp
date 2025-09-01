@@ -13,6 +13,8 @@ public:
     bool isAtEnd() { return pos >= tokens.size(); }
     Token peek() { return tokens[pos]; }
     Token advance() { return tokens[pos++]; }
+    // Token consume(TokenType type, const std::string& message);
+
     // Token previous() { return tokens[pos -1]; }
 
     std::vector<std::shared_ptr<ASTNode>> parse();
@@ -26,4 +28,5 @@ public:
     std::shared_ptr<ASTNode> parseFactor();
     std::shared_ptr<ASTNode> parseFunction();
     std::shared_ptr<ASTNode> parseClass();
+    std::shared_ptr<ASTNode> parsePostfix();
 };

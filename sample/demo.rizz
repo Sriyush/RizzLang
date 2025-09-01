@@ -5,20 +5,20 @@ bruh y/x
 //less go boizzz
 a=0
 bet x>5:
-    bruh "its in if"
+    bruh "its in if" //another check
 noFam x!=10:
     bruh "its in elseif1"
 noFam x>10:
     bruh "its in elseif2"
     a=19
 forReal:
-    bruh "its in else"
+    bruh "its in else" //this is the issue
 yikes
 
 spill dawg
-spill nigger
+spill fella
 bruh a
-result = (dawg + nigger) * 3;
+result = (dawg + fella) * 3;
 bruh result
 
 drip compare(x,y):
@@ -32,3 +32,26 @@ drip compare(x,y):
 finna
 compare(x,y)
 // hi this is a test
+
+drip indexCheck():
+    name = "Ayush Srivastava"
+    bruh name[2]
+    bruh name[-5]
+finna
+
+indexCheck()
+
+rizz myClass:
+    drip greet(a):
+        bruh a
+    finna
+
+    drip add(a,b):
+        bruh a+b
+    finna
+goner
+
+obj = pullup myClass()
+obj.greet("hi")
+obj.add(x,y)
+
