@@ -28,6 +28,5 @@ jobs:
         with:
           files: |
             build/rizz*
-            build/Release/rizz*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
