@@ -55,3 +55,9 @@ obj = pullup myClass()
 obj.greet("hi")
 obj.add(x,y)
 
+drip concat():
+    str1 = "ha"
+    str2 = "hi"
+    bruh str1 + str2
+    bruh str1 + 2.7
+finna

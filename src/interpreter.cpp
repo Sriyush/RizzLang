@@ -210,6 +210,17 @@ Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode> &n
             if (be->op == "==") return l == r;
             if (be->op == "!=") return l != r;
         }
+            if (be->op == "+" && std::holds_alternative<std::string>(L) && std::holds_alternative<std::string>(R)) {
+                return std::get<std::string>(L) + std::get<std::string>(R);
+            }
+
+            // string + number
+            if (be->op == "+" && std::holds_alternative<std::string>(L) && std::holds_alternative<double>(R)) {
+                return std::get<std::string>(L) + std::to_string(std::get<double>(R));
+            }
+            if (be->op == "+" && std::holds_alternative<double>(L) && std::holds_alternative<std::string>(R)) {
+                return std::to_string(std::get<double>(L)) + std::get<std::string>(R);
+            }
         throw std::runtime_error("Invalid operands for binary operator: " + be->op);
     }
 
@@ -290,7 +301,7 @@ case ASTNodeType::METHOD_CALL_EXPR: {
             if (i < 0 || i >= (int)arr.size()) throw std::runtime_error("Array index out of range");
             return arr[i];
         }
-        throw std::runtime_error("Indexing not supported on this type");
+        throw std::runtime_error("Brotha Check up with the Data type , cause i dont think so it works with this");
     }
 
     default:
