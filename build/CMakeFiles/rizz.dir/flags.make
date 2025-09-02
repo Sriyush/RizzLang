@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -I/mnt/EC92BD5A92BD2A4A/codes/Rizz++/src -I/mnt/EC92BD5A92BD2A4A/codes/Rizz++/include
 
 CXX_FLAGS = -std=gnu++17
 

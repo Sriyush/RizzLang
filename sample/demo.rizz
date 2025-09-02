@@ -61,3 +61,20 @@ drip concat():
     bruh str1 + str2
     bruh str1 + 2.7
 finna
+
+rizz brotha:
+    drip check(x):
+        bet x %2 ==0 :
+            bruh "This is even"
+        forReal:
+            bruh "This is odd"
+        yikes
+    finna
+goner
+
+spill num
+bro = pullup brotha()
+bro.check(num)
+
+arr = [1,2,3,4]
+bruh arr[0] + arr[2]; bruh "lol"

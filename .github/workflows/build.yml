@@ -1,0 +1,32 @@
+name: Build and Release RizzLang
+
+on:
+  push:
+    tags:
+      - "v*"   # Runs only when you push a tag like v1.0.0
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure CMake
+        run: cmake -B build
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rizz-${{ matrix.os }}
+          path: |
+            build/rizz*
+            build/Release/rizz*.exe

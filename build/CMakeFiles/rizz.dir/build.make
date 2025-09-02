@@ -69,19 +69,19 @@ include CMakeFiles/rizz.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/rizz.dir/flags.make
 
-CMakeFiles/rizz.dir/src/main.cpp.o: CMakeFiles/rizz.dir/flags.make
-CMakeFiles/rizz.dir/src/main.cpp.o: /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp
-CMakeFiles/rizz.dir/src/main.cpp.o: CMakeFiles/rizz.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/rizz.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rizz.dir/src/main.cpp.o -MF CMakeFiles/rizz.dir/src/main.cpp.o.d -o CMakeFiles/rizz.dir/src/main.cpp.o -c /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp
+CMakeFiles/rizz.dir/src/interpreter.cpp.o: CMakeFiles/rizz.dir/flags.make
+CMakeFiles/rizz.dir/src/interpreter.cpp.o: /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp
+CMakeFiles/rizz.dir/src/interpreter.cpp.o: CMakeFiles/rizz.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/rizz.dir/src/interpreter.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rizz.dir/src/interpreter.cpp.o -MF CMakeFiles/rizz.dir/src/interpreter.cpp.o.d -o CMakeFiles/rizz.dir/src/interpreter.cpp.o -c /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp
 
-CMakeFiles/rizz.dir/src/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rizz.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp > CMakeFiles/rizz.dir/src/main.cpp.i
+CMakeFiles/rizz.dir/src/interpreter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rizz.dir/src/interpreter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp > CMakeFiles/rizz.dir/src/interpreter.cpp.i
 
-CMakeFiles/rizz.dir/src/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rizz.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp -o CMakeFiles/rizz.dir/src/main.cpp.s
+CMakeFiles/rizz.dir/src/interpreter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rizz.dir/src/interpreter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp -o CMakeFiles/rizz.dir/src/interpreter.cpp.s
 
 CMakeFiles/rizz.dir/src/lexer.cpp.o: CMakeFiles/rizz.dir/flags.make
 CMakeFiles/rizz.dir/src/lexer.cpp.o: /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/lexer.cpp
@@ -97,10 +97,24 @@ CMakeFiles/rizz.dir/src/lexer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rizz.dir/src/lexer.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/lexer.cpp -o CMakeFiles/rizz.dir/src/lexer.cpp.s
 
+CMakeFiles/rizz.dir/src/main.cpp.o: CMakeFiles/rizz.dir/flags.make
+CMakeFiles/rizz.dir/src/main.cpp.o: /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp
+CMakeFiles/rizz.dir/src/main.cpp.o: CMakeFiles/rizz.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/rizz.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rizz.dir/src/main.cpp.o -MF CMakeFiles/rizz.dir/src/main.cpp.o.d -o CMakeFiles/rizz.dir/src/main.cpp.o -c /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp
+
+CMakeFiles/rizz.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rizz.dir/src/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp > CMakeFiles/rizz.dir/src/main.cpp.i
+
+CMakeFiles/rizz.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rizz.dir/src/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/main.cpp -o CMakeFiles/rizz.dir/src/main.cpp.s
+
 CMakeFiles/rizz.dir/src/parser.cpp.o: CMakeFiles/rizz.dir/flags.make
 CMakeFiles/rizz.dir/src/parser.cpp.o: /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/parser.cpp
 CMakeFiles/rizz.dir/src/parser.cpp.o: CMakeFiles/rizz.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/rizz.dir/src/parser.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/rizz.dir/src/parser.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rizz.dir/src/parser.cpp.o -MF CMakeFiles/rizz.dir/src/parser.cpp.o.d -o CMakeFiles/rizz.dir/src/parser.cpp.o -c /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/parser.cpp
 
 CMakeFiles/rizz.dir/src/parser.cpp.i: cmake_force
@@ -111,34 +125,20 @@ CMakeFiles/rizz.dir/src/parser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rizz.dir/src/parser.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/parser.cpp -o CMakeFiles/rizz.dir/src/parser.cpp.s
 
-CMakeFiles/rizz.dir/src/interpreter.cpp.o: CMakeFiles/rizz.dir/flags.make
-CMakeFiles/rizz.dir/src/interpreter.cpp.o: /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp
-CMakeFiles/rizz.dir/src/interpreter.cpp.o: CMakeFiles/rizz.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/rizz.dir/src/interpreter.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rizz.dir/src/interpreter.cpp.o -MF CMakeFiles/rizz.dir/src/interpreter.cpp.o.d -o CMakeFiles/rizz.dir/src/interpreter.cpp.o -c /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp
-
-CMakeFiles/rizz.dir/src/interpreter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rizz.dir/src/interpreter.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp > CMakeFiles/rizz.dir/src/interpreter.cpp.i
-
-CMakeFiles/rizz.dir/src/interpreter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rizz.dir/src/interpreter.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/EC92BD5A92BD2A4A/codes/Rizz++/src/interpreter.cpp -o CMakeFiles/rizz.dir/src/interpreter.cpp.s
-
 # Object files for target rizz
 rizz_OBJECTS = \
-"CMakeFiles/rizz.dir/src/main.cpp.o" \
+"CMakeFiles/rizz.dir/src/interpreter.cpp.o" \
 "CMakeFiles/rizz.dir/src/lexer.cpp.o" \
-"CMakeFiles/rizz.dir/src/parser.cpp.o" \
-"CMakeFiles/rizz.dir/src/interpreter.cpp.o"
+"CMakeFiles/rizz.dir/src/main.cpp.o" \
+"CMakeFiles/rizz.dir/src/parser.cpp.o"
 
 # External object files for target rizz
 rizz_EXTERNAL_OBJECTS =
 
-rizz: CMakeFiles/rizz.dir/src/main.cpp.o
-rizz: CMakeFiles/rizz.dir/src/lexer.cpp.o
-rizz: CMakeFiles/rizz.dir/src/parser.cpp.o
 rizz: CMakeFiles/rizz.dir/src/interpreter.cpp.o
+rizz: CMakeFiles/rizz.dir/src/lexer.cpp.o
+rizz: CMakeFiles/rizz.dir/src/main.cpp.o
+rizz: CMakeFiles/rizz.dir/src/parser.cpp.o
 rizz: CMakeFiles/rizz.dir/build.make
 rizz: CMakeFiles/rizz.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable rizz"

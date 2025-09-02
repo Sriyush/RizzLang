@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <cmath>
 
-// Helper: call a function (global or method). self == nullptr for globals.
 Interpreter::Value Interpreter::callFunction(
     const std::shared_ptr<FuncDef>& fn,
     const std::vector<Value>& args,
@@ -13,27 +12,21 @@ Interpreter::Value Interpreter::callFunction(
     if (args.size() != fn->params.size())
         throw std::runtime_error("Argument count mismatch in call to " + fn->name);
 
-    // Save current variables and swap in a fresh local env
     auto oldVars = variables;
-    // Bind parameters
     for (size_t i = 0; i < fn->params.size(); ++i) {
         variables[fn->params[i]] = args[i];
     }
-    // Bind `self` for methods as variable "self"
     if (self) variables["self"] = self;
 
-    // Execute function body and catch return by throwing Value (if you want that pattern).
     try {
         for (auto &stmt : fn->body) {
             executeNode(stmt);
         }
     } catch (Interpreter::Value &retVal) {
-        // restore environment and propagate return value
         variables = oldVars;
         return retVal;
     }
 
-    // restore environment and return default (0.0)
     variables = oldVars;
     return 0.0;
 }
@@ -52,6 +45,18 @@ void Interpreter::executeNode(const std::shared_ptr<ASTNode> &node) {
         else if (std::holds_alternative<std::string>(val)) std::cout << std::get<std::string>(val) << std::endl;
         else if (std::holds_alternative<bool>(val)) std::cout << (std::get<bool>(val) ? "no_cap" : "cap") << std::endl;
         else if (std::holds_alternative<std::shared_ptr<Instance>>(val)) std::cout << "<object>" << std::endl;
+         else if (std::holds_alternative<Array>(val)) {
+        auto &arr = std::get<Array>(val);
+        std::cout << "[";
+        for (size_t i = 0; i < arr.size(); ++i) {
+            // recursively print elements (simplest: only numbers/strings)
+            if (std::holds_alternative<double>(arr[i])) std::cout << std::get<double>(arr[i]);
+            else if (std::holds_alternative<std::string>(arr[i])) std::cout << '"' << std::get<std::string>(arr[i]) << '"';
+            else if (std::holds_alternative<bool>(arr[i])) std::cout << (std::get<bool>(arr[i]) ? "true" : "false");
+            if (i + 1 < arr.size()) std::cout << ", ";
+        }
+        std::cout << "]"<<std::endl;
+    }
         break;
     }
 
@@ -72,7 +77,7 @@ void Interpreter::executeNode(const std::shared_ptr<ASTNode> &node) {
                 if (std::holds_alternative<bool>(condVal)) condResult = std::get<bool>(condVal);
                 else if (std::holds_alternative<double>(condVal)) condResult = (std::get<double>(condVal) != 0.0);
                 else if (std::holds_alternative<std::string>(condVal)) condResult = !std::get<std::string>(condVal).empty();
-                else condResult = true; // treat objects/arrays truthy if needed
+                else condResult = true;
             } else {
                 condResult = true;
             }
@@ -100,7 +105,6 @@ void Interpreter::executeNode(const std::shared_ptr<ASTNode> &node) {
 
     case ASTNodeType::RETURN_STMT: {
         auto stmt = std::dynamic_pointer_cast<ReturnStmt>(node);
-        // Evaluate return expression and throw it to unwind (existing pattern)
         throw evalExpression(stmt->value);
     }
 
@@ -130,7 +134,6 @@ void Interpreter::executeInput(const std::shared_ptr<InputStmt> &stmt) {
     }
 }
 
-// Evaluate expressions (numbers, strings, id, calls, new, method call, binary, unary, index)
 Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode> &node) {
     switch (node->type) {
     case ASTNodeType::NUMBER:
@@ -157,13 +160,11 @@ Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode> &n
             return callFunction(it->second, argVals, nullptr);
         }
 
-        // 2. If not found, maybe it's a variable holding an instance
         auto varIt = variables.find(call->callee);
         if (varIt != variables.end() && 
             std::holds_alternative<std::shared_ptr<Instance>>(varIt->second)) {
             
             auto instance = std::get<std::shared_ptr<Instance>>(varIt->second);
-            // look for a constructor-style method "init"
             auto methodIt = instance->methods.find("init");
             if (methodIt != instance->methods.end()) {
                 std::vector<Value> argVals;
@@ -181,12 +182,10 @@ Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode> &n
         if (cit == classes.end()) throw std::runtime_error("Class not found: " + no->className);
         auto cl = cit->second;
         auto inst = std::make_shared<Instance>();
-        // copy methods into instance
         for (auto &m : cl->methods) {
         inst->methods[m->name] = m;
         // std::cerr << "[DEBUG] Instance of " << cl->name << " stored method: " << m->name << "\n";
     }
-        // (optional) you could call initializer here if you had one
         return inst;
     }
 
@@ -214,7 +213,6 @@ Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode> &n
                 return std::get<std::string>(L) + std::get<std::string>(R);
             }
 
-            // string + number
             if (be->op == "+" && std::holds_alternative<std::string>(L) && std::holds_alternative<double>(R)) {
                 return std::get<std::string>(L) + std::to_string(std::get<double>(R));
             }
@@ -246,16 +244,14 @@ Interpreter::Value Interpreter::evalExpression(const std::shared_ptr<ASTNode> &n
     }
     auto instance = std::get<std::shared_ptr<Instance>>(objVal);
 
-    // Look for a field first
     auto it = instance->fields.find(ma->member);
     if (it != instance->fields.end()) {
         return it->second;
     }
 
-    // Or look for a method reference (optional)
     auto mit = instance->methods.find(ma->member);
     if (mit != instance->methods.end()) {
-        return mit->second; // if your Value can hold callable functions
+        return mit->second;
     }
 
     throw std::runtime_error("Unknown member: " + ma->member);
@@ -283,26 +279,38 @@ case ASTNodeType::METHOD_CALL_EXPR: {
     return callFunction(mit->second, argVals, instance);
 }
 
-    case ASTNodeType::INDEX_EXPR: {
-        auto ie = std::dynamic_pointer_cast<IndexExpr>(node);
-        auto target = evalExpression(ie->target);
-        auto index = evalExpression(ie->index);
-        if (!std::holds_alternative<double>(index)) throw std::runtime_error("Index must be a number");
-        int i = static_cast<int>(std::get<double>(index));
+case ASTNodeType::INDEX_EXPR: {
+    auto ie = std::dynamic_pointer_cast<IndexExpr>(node);
+    auto target = evalExpression(ie->target);
+    auto index = evalExpression(ie->index);
 
-        if (std::holds_alternative<std::string>(target)) {
-            const auto &s = std::get<std::string>(target);
-            if (i < 0) i = (int)s.size() + i;
-            if (i < 0 || i >= (int)s.size()) throw std::runtime_error("String index out of range");
-            return std::string(1, s[i]);
-        } else if (std::holds_alternative<Array>(target)) {
-            const auto &arr = std::get<Array>(target);
-            if (i < 0) i = (int)arr.size() + i;
-            if (i < 0 || i >= (int)arr.size()) throw std::runtime_error("Array index out of range");
-            return arr[i];
-        }
-        throw std::runtime_error("Brotha Check up with the Data type , cause i dont think so it works with this");
+    if (!std::holds_alternative<double>(index))
+        throw std::runtime_error("Index must be a number");
+    int i = static_cast<int>(std::get<double>(index));
+
+    if (std::holds_alternative<Array>(target)) {
+        auto &arr = std::get<Array>(target);
+        if (i < 0) i = (int)arr.size() + i; // support negative indexing
+        if (i < 0 || i >= (int)arr.size()) throw std::runtime_error("Array index out of range");
+        return arr[i];
+    } else if (std::holds_alternative<std::string>(target)) {
+        auto &s = std::get<std::string>(target);
+        if (i < 0) i = (int)s.size() + i;
+        if (i < 0 || i >= (int)s.size()) throw std::runtime_error("String index out of range");
+        return std::string(1, s[i]);
     }
+    throw std::runtime_error("Target is not indexable");
+}
+
+    case ASTNodeType::ARRAY_LITERAL: {
+    auto arrNode = std::dynamic_pointer_cast<ArrayLiteral>(node);
+    Array vals;  // create an Array
+    for (auto &el : arrNode->elements) {
+        vals.push_back(evalExpression(el)); // recursively evaluate each element
+    }
+    return Value(vals); // wrap Array in Value
+}
+
 
     default:
         throw std::runtime_error("Unknown expression node in evalExpression");

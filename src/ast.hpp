@@ -23,7 +23,7 @@ enum class ASTNodeType {
     CALL_EXPR,
     NEW_OBJECT_EXPR,
     METHOD_CALL_EXPR,
-    // PROPERTY_ACCESS
+    ARRAY_LITERAL,
     MEMBER_ACCESS_EXPR
 };
 
@@ -215,5 +215,15 @@ struct MethodCallExpr : public ASTNode {
         object = std::move(obj);
         method = meth;
         arguments = std::move(args);
+    }
+};
+struct ArrayLiteral : ASTNode {
+    std::vector<std::shared_ptr<ASTNode>> elements;
+
+    ArrayLiteral() { type = ASTNodeType::ARRAY_LITERAL; }
+    ArrayLiteral(const std::vector<std::shared_ptr<ASTNode>>& elems)
+        : elements(elems)
+    {
+        type = ASTNodeType::ARRAY_LITERAL;
     }
 };

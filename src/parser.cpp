@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <iostream>
 
-
-
 std::vector<std::shared_ptr<ASTNode>> Parser::parse()
 {
     std::vector<std::shared_ptr<ASTNode>> program;
@@ -42,7 +40,7 @@ std::shared_ptr<ASTNode> Parser::statement()
         advance();
         return std::make_shared<PrintStmt>(expression());
 
-    case TokenType::COND: // delegate to helper
+    case TokenType::COND:
         return parseIfStatement();
 
     case TokenType::COLON:
@@ -53,109 +51,116 @@ std::shared_ptr<ASTNode> Parser::statement()
         advance();
         return nullptr;
 
-case TokenType::IDENT:
-{
-    std::string name = tok.value;
-    size_t lookaheadPos = pos + 1;
-    while (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::NEWLINE)
-        lookaheadPos++;
-
-    // Assignment: x = expr
-    if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::ASSIGN)
+    case TokenType::IDENT:
     {
-        advance(); // consume IDENT
-        while (peek().type == TokenType::NEWLINE)
-            advance();
-        advance(); // consume '='
-        auto val = expression();
-        if (peek().type == TokenType::SEMI)
-            advance();
-        return std::make_shared<AssignStmt>(name, val);
-    }
+        std::string name = tok.value;
+        size_t lookaheadPos = pos + 1;
+        while (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::NEWLINE)
+            lookaheadPos++;
 
-    // Function call: foo(...)
-    if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::LPAREN)
-    {
-        advance(); // consume IDENT
-        advance(); // consume '('
-        std::vector<std::shared_ptr<ASTNode>> args;
-        if (peek().type != TokenType::RPAREN)
+        // Assignment: x = expr
+        if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::ASSIGN)
         {
-            do
+            advance(); // consume IDENT
+            while (peek().type == TokenType::NEWLINE)
+                advance();
+            advance(); // consume '='
+            auto val = expression();
+            if (peek().type == TokenType::SEMI)
+                advance();
+            return std::make_shared<AssignStmt>(name, val);
+        }
+
+        // Function call: foo(...)
+        if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::LPAREN)
+        {
+            advance(); // consume IDENT
+            advance(); // consume '('
+            std::vector<std::shared_ptr<ASTNode>> args;
+            if (peek().type != TokenType::RPAREN)
             {
-                args.push_back(expression());
-                if (peek().type == TokenType::COMMA)
+                do
                 {
-                    advance(); // consume ','
+                    args.push_back(expression());
+                    if (peek().type == TokenType::COMMA)
+                    {
+                        advance(); // consume ','
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (true);
+            }
+            advance(); // consume ')'
+            if (peek().type == TokenType::SEMI)
+                advance(); // optional ';'
+            return std::make_shared<ExprStmt>(
+                std::make_shared<CallExpr>(name, args));
+        }
+
+        // Property or Method call: x.something or x.something(...)
+        if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::DOT)
+        {
+            advance(); // consume IDENT (x)
+            std::shared_ptr<ASTNode> objectExpr = std::make_shared<IdentExpr>(name);
+
+            while (peek().type == TokenType::DOT)
+            {
+                advance(); // consume '.'
+
+                if (peek().type != TokenType::IDENT)
+                {
+                    throw std::runtime_error("Expected property/method name after '.'");
+                }
+
+                std::string propName = peek().value;
+                advance(); // consume IDENT
+
+                if (peek().type == TokenType::LPAREN)
+                {
+                    // Method call
+                    advance(); // consume '('
+                    std::vector<std::shared_ptr<ASTNode>> args;
+                    if (peek().type != TokenType::RPAREN)
+                    {
+                        do
+                        {
+                            args.push_back(expression());
+                            if (peek().type == TokenType::COMMA)
+                            {
+                                advance(); // consume ','
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        } while (true);
+                    }
+                    advance(); // consume ')'
+
+                    objectExpr = std::make_shared<MethodCallExpr>(objectExpr, propName, args);
                 }
                 else
                 {
-                    break;
+                    // Just property access
+                    objectExpr = std::make_shared<MemberAccessExpr>(objectExpr, propName);
                 }
-            } while (true);
+            }
+
+            if (peek().type == TokenType::SEMI)
+                advance();
+            return std::make_shared<ExprStmt>(objectExpr);
         }
-        advance(); // consume ')'
-        if (peek().type == TokenType::SEMI)
-            advance(); // optional ';'
-        return std::make_shared<ExprStmt>(
-            std::make_shared<CallExpr>(name, args));
-    }
 
-    // Property or Method call: x.something or x.something(...)
-    if (lookaheadPos < tokens.size() && tokens[lookaheadPos].type == TokenType::DOT)
-    {
-        advance(); // consume IDENT (x)
-std::shared_ptr<ASTNode> objectExpr = std::make_shared<IdentExpr>(name);
-
-while (peek().type == TokenType::DOT) {
-    advance(); // consume '.'
-
-    if (peek().type != TokenType::IDENT) {
-        throw std::runtime_error("Expected property/method name after '.'");
-    }
-
-    std::string propName = peek().value;
-    advance(); // consume IDENT
-
-    if (peek().type == TokenType::LPAREN) {
-        // Method call
-        advance(); // consume '('
-        std::vector<std::shared_ptr<ASTNode>> args;
-        if (peek().type != TokenType::RPAREN) {
-            do {
-                args.push_back(expression());
-                if (peek().type == TokenType::COMMA) {
-                    advance(); // consume ','
-                } else {
-                    break;
-                }
-            } while (true);
-        }
-        advance(); // consume ')'
-
-        objectExpr = std::make_shared<MethodCallExpr>(objectExpr, propName, args);
-    } else {
-        // Just property access
-        objectExpr = std::make_shared<MemberAccessExpr>(objectExpr, propName);
-    }
-}
-
-
+        advance();
         if (peek().type == TokenType::SEMI)
             advance();
-        return std::make_shared<ExprStmt>(objectExpr);
+        return std::make_shared<ExprStmt>(std::make_shared<IdentExpr>(name));
     }
-
-    // Fallback: just identifier reference
-    advance();
-    if (peek().type == TokenType::SEMI)
-        advance();
-    return std::make_shared<ExprStmt>(std::make_shared<IdentExpr>(name));
-}
 
     case TokenType::OBJECT:
     {
-        // tok was 'pullup' (or 'new'), next must be class name
         if (peek().type != TokenType::IDENT)
             throw std::runtime_error("Expected class name after 'pullup'");
         std::string className = peek().value;
@@ -204,17 +209,16 @@ while (peek().type == TokenType::DOT) {
 
     case TokenType::CLASS:
         return parseClass();
-        
+
     case TokenType::INPUT:
         return parseInput();
-    
+
     default:
         auto expr = expression();
         return std::make_shared<ExprStmt>(expr);
     }
 }
 
-// ---------------- expressions ----------------
 std::shared_ptr<ASTNode> Parser::primary()
 {
     Token tok = advance();
@@ -241,7 +245,8 @@ std::shared_ptr<ASTNode> Parser::primary()
             std::vector<std::shared_ptr<ASTNode>> args;
             if (peek().type != TokenType::RPAREN)
             {
-                do {
+                do
+                {
                     args.push_back(expression());
                     if (peek().type == TokenType::COMMA)
                         advance();
@@ -271,7 +276,8 @@ std::shared_ptr<ASTNode> Parser::primary()
         std::vector<std::shared_ptr<ASTNode>> args;
         if (peek().type != TokenType::RPAREN)
         {
-            do {
+            do
+            {
                 args.push_back(expression());
                 if (peek().type == TokenType::COMMA)
                     advance();
@@ -300,25 +306,41 @@ std::shared_ptr<ASTNode> Parser::primary()
     case TokenType::DOT:
         advance();
         break;
-    default:
-        if (tok.type == TokenType::RPAREN)
-            throw std::runtime_error("Unexpected ')'");
-        // if (tok.type == TokenType::DOT)
-        //     throw std::runtime_error("Misplaced '.' — did you forget a left-hand side?");
-        throw std::runtime_error("Unexpected token in expression: " + tok.value);
+    case TokenType::LBRACKET:  // <-- new
+        {
+            std::vector<std::shared_ptr<ASTNode>> elements;
+            if (peek().type != TokenType::RBRACKET) {
+                do {
+                    elements.push_back(expression());
+                    if (peek().type == TokenType::COMMA)
+                        advance();
+                    else
+                        break;
+                } while (!isAtEnd());
+            }
+            if (peek().type != TokenType::RBRACKET)
+                throw std::runtime_error("Expected ']' at end of array literal");
+            advance(); // consume ']'
+            expr = std::make_shared<ArrayLiteral>(elements);
+            break;
+        }
+
+        default:
+            throw std::runtime_error("Unexpected token in expression: " + tok.value);
     }
 
-    // --- Postfix handling for ALL expressions ---
-    // Array indexing
-    while (peek().type == TokenType::LBRACKET)
-    {
+    // handle array indexing e.g., a[0]
+
+
+
+    while (peek().type == TokenType::LBRACKET) {
         advance(); // '['
         auto indexExpr = expression();
-        advance();
+        if (peek().type != TokenType::RBRACKET)
+            throw std::runtime_error("Expected ']' after index");
+        advance(); // ']'
         expr = std::make_shared<IndexExpr>(expr, indexExpr);
     }
-
-
     return expr;
 }
 
@@ -326,7 +348,7 @@ std::shared_ptr<ASTNode> Parser::expression()
 {
     auto left = parseTerm();
 
-    // Handle binary comparisons (>, <, ==, etc.) 
+    // Handle binary comparisons (>, <, ==, etc.)
     while (!isAtEnd() &&
            (peek().type == TokenType::GT ||
             peek().type == TokenType::LT ||
@@ -375,8 +397,8 @@ std::shared_ptr<ASTNode> Parser::parseFactor()
 std::shared_ptr<ASTNode> Parser::parseUnary()
 {
     if (!isAtEnd() &&
-        (peek().type == TokenType::REV ||  // !
-         peek().type == TokenType::MINUS)) // -x
+        (peek().type == TokenType::REV ||  
+         peek().type == TokenType::MINUS)) 
     {
         Token op = advance();
         auto right = parseUnary();
@@ -419,9 +441,9 @@ const char *ASTNodeTypeToString(ASTNodeType type)
         return "UNARY_EXPR";
     case ASTNodeType::INDEX_EXPR:
         return "INDEX_EXPR";
-   case ASTNodeType::MEMBER_ACCESS_EXPR: return "MEMBER_ACCESS";
+    case ASTNodeType::MEMBER_ACCESS_EXPR:
+        return "MEMBER_ACCESS";
 
-    // Add all possible enum values for completeness
     default:
         return "UNKNOWN";
     }
@@ -554,9 +576,10 @@ std::shared_ptr<ASTNode> Parser::parseFunction()
 
     return std::make_shared<FuncDef>(nameTok.value, params, body);
 }
+
 std::shared_ptr<ASTNode> Parser::parseClass()
 {
-    advance(); // consume 'rizz'
+    advance();
 
     Token nameTok = peek();
     if (nameTok.type != TokenType::IDENT)
@@ -579,7 +602,6 @@ std::shared_ptr<ASTNode> Parser::parseClass()
             continue;
         }
 
-        // parse function inside class
         if (peek().type == TokenType::FUNC)
         {
             auto fn = std::dynamic_pointer_cast<FuncDef>(parseFunction());
@@ -589,14 +611,13 @@ std::shared_ptr<ASTNode> Parser::parseClass()
         }
         else
         {
-            // allow other statements, but usually classes only contain functions
             statement();
         }
     }
 
     if (peek().type != TokenType::CLASSEND)
         throw std::runtime_error("Expected 'goner' to close class");
-    advance(); // consume 'goner'
+    advance();
 
     return std::make_shared<ClassDef>(nameTok.value, methods);
 }
