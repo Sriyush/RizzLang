@@ -40,7 +40,7 @@ TO comment a line just use // in front of the the statement
 ```rizz
 //this just a comment
 a=10
-bruh=10
+bruh a
 ```
 
 ### arthematic operations
