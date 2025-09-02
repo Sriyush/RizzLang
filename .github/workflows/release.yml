@@ -27,6 +27,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/rizz*
+            ${{ matrix.os == 'windows-latest' && 'build/Release/rizz.exe' || 'build/rizz*' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
