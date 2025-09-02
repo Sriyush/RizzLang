@@ -1,7 +1,0 @@
-/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles/rizz.dir
-/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles/edit_cache.dir
-/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles/rebuild_cache.dir
-/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles/list_install_components.dir
-/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles/install.dir
-/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles/install/local.dir
-/mnt/EC92BD5A92BD2A4A/codes/Rizz++/build/CMakeFiles/install/strip.dir
