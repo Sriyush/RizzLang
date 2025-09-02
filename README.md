@@ -17,6 +17,18 @@ a= 10
 b=10
 bruh a + b
 ```
+```output
+20
+```
+
+### arrays
+You can also use arrays just like how you use it python , you can even use indexing
+
+```rizz
+a =[12,3,4]
+bruh a
+bruh a[0]
+```
 ### Booleans
 
 Just like a normal programing this also contains Boolean but with fun naming
