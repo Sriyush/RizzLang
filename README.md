@@ -6,6 +6,16 @@ Say hello to a fresh Gen-Z flavored language 🚀 — built entirely in C++ with
 
 This isn’t just a language for one dev — it’s a community project. Contribute, experiment, and help it grow. Let’s build something iconic together
 
+## Installation 
+
+You can also install in your system , right now its only available for macOS/linux via homebrew, Soon it will be available for windows too.
+
+```install
+brew tap sriyush/rizzlang
+brew install rizzlang
+//to check the version
+brew list --verisons rizzlang
+```
 ## Docs
 
 ### Print 
