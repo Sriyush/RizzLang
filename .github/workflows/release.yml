@@ -23,10 +23,18 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
-      - name: Upload Release Asset
+      - name: Upload Release Asset (Windows)
+        if: matrix.os == 'windows-latest'
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            ${{ matrix.os == 'windows-latest' && 'build/Release/rizz.exe' || 'build/rizz*' }}
+          files: build/Release/rizz.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/rizz*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
