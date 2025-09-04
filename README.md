@@ -16,6 +16,13 @@ brew install sriyush/rizzlang/rizzlang
 brew list --verisons rizzlang
 rizz --version
 ```
+
+## Running your code
+
+To run your code create a file with .rizz extention. and then:-
+```run
+rizz vibe.rizz
+```
 ## Docs
 
 ### Print 
