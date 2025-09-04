@@ -11,10 +11,10 @@ This isn’t just a language for one dev — it’s a community project. Contrib
 You can also install in your system , right now its only available for macOS/linux via homebrew, Soon it will be available for windows too.
 
 ```install
-brew tap sriyush/rizzlang
-brew install rizzlang
+brew install sriyush/rizzlang/rizzlang
 //to check the version
 brew list --verisons rizzlang
+rizz --version
 ```
 ## Docs
 
