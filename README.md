@@ -13,7 +13,6 @@ You can also install in your system , right now its only available for macOS/lin
 ```install
 brew install sriyush/rizzlang/rizzlang
 //to check the version
-brew list --verisons rizzlang
 rizz --version
 ```
 
