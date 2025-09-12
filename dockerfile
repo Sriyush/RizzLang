@@ -1,23 +1,40 @@
-# Use official emscripten SDK image
-FROM emscripten/emsdk:3.1.56 as builder
+# Stage 1: Build with Emscripten
+FROM emscripten/emsdk:3.1.56 AS builder
 
 WORKDIR /app
 
 # Copy project
 COPY . .
-RUN rm -rf build
-# Build to WebAssembly (C++17)
-RUN emcmake cmake -DCMAKE_CXX_STANDARD=17 -B build
-RUN emmake make -C build -j$(nproc)
 
-# Example: if your main target is 'rizz'
-RUN emcc src/main.cpp -o rizz.wasm \
+# Clean previous builds
+RUN rm -rf build
+
+# Configure project with emcmake
+RUN emcmake cmake -B build -DCMAKE_CXX_STANDARD=17
+
+# Build project
+RUN em++ src/*.cpp -o rizz.js \
     -s WASM=1 \
     -s MODULARIZE=1 \
     -s EXPORT_ES6=1 \
-    -s ENVIRONMENT="web,node" \
+    -s ENVIRONMENT=web \
+    -s ALLOW_MEMORY_GROWTH \
+    -s EXPORTED_FUNCTIONS="['_runCodeC']" \
+    -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap'] \
     -std=c++17
 
-# Final stage (optional, just outputs wasm)
+
+
+# Create a single .wasm module from the built executable (assuming target is 'rizz')
+RUN emcc src/*.cpp \
+    -o rizz.js \
+    -s MODULARIZE=1 \
+    -s EXPORT_ES6=0 \
+    -s EXPORTED_FUNCTIONS="['_runCodeC']" \
+    -s EXPORTED_RUNTIME_METHODS="['cwrap','ccall']"
+
+
+# Stage 2: Export final wasm (and JS loader)
 FROM scratch AS export
 COPY --from=builder /app/rizz.wasm /
+COPY --from=builder /app/rizz.js /
