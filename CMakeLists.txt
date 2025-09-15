@@ -13,13 +13,3 @@ add_executable(rizz ${SOURCES})
 target_include_directories(rizz PRIVATE src include)
 
 install(TARGETS rizz DESTINATION bin)
-
-if(EMSCRIPTEN)
-    message(STATUS "Building with Emscripten → WebAssembly output")
-
-    # Tell Emscripten to emit wasm + JS loader
-    set_target_properties(rizz PROPERTIES
-        LINK_FLAGS "-s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=1 -s ENVIRONMENT=web,node"
-        SUFFIX ".wasm"
-    )
-endif()
